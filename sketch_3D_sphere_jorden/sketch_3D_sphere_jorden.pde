@@ -11,19 +11,38 @@ float r = 200;
 
 PImage earth;
 PShape globe;
+JSONObject json;
+JSONObject json2;
+
 
 void setup() {
+    json = loadJSONObject("https://www.n2yo.com/rest/v1/satellite/positions/10529/41.702/-76.014/0/2/&&apiKey=UY7JUM-PX4X5D-CXLF35-4KH0");
+   // json2 = load
   size(600, 600, P3D);
   earth = loadImage("earth.jpg");
-  // table = loadTable("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/significant_day.csv", "header");
-  table = loadTable("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.csv", "header");
-
+  
   noStroke();
   globe = createShape(SPHERE, r);
   globe.setTexture(earth);
+  println(json);
 }
 
 void draw() {
+
+  JSONArray posi =  json.getJSONArray("positions"); 
+ JSONObject position = posi.getJSONObject(0);
+ float lat = position.getFloat("satlatitude");
+ float lon  = position.getFloat("satlatitude");
+ float alt = position.getFloat("sataltitude");
+ 
+ /*
+   JSONArray posi =  json.getJSONArray("positions"); 
+ JSONObject position = posi.getJSONObject(0);
+ float lat = position.getFloat("satlatitude");
+ float lon  = position.getFloat("satlatitude");
+ float alt = position.getFloat("sataltitude");
+ */
+ println(position);
   background(51);
   translate(width*0.5, height*0.5);
   rotateY(angle);
@@ -34,11 +53,11 @@ void draw() {
   noStroke();
   //sphere(r);
   shape(globe);
+  
 
-  for (TableRow row : table.rows()) {
-    float lat = row.getFloat("latitude");
-    float lon = row.getFloat("longitude");
-    float mag = row.getFloat("mag");
+ //   float lat = row.getFloat("latitude");
+ //   float lon = row.getFloat("longitude");
+ //   float mag = row.getFloat("mag");
 
     // original version
     // float theta = radians(lat) + PI/2;
@@ -60,7 +79,7 @@ void draw() {
 
     PVector pos = new PVector(x, y, z);
 
-    float h = pow(10, mag);
+    float h = pow(10, alt);
     float maxh = pow(10, 7);
     h = map(h, 0, maxh, 10, 100);
     PVector xaxis = new PVector(1, 0, 0);
@@ -70,10 +89,11 @@ void draw() {
 
 
     pushMatrix();
-    translate(x, y, z);
+    translate(x, y, z*2);
     rotate(angleb, raxis.x, raxis.y, raxis.z);
     fill(255);
-    box(h, 5, 5);
+    box(5, 5, 5);
     popMatrix();
+    
   }
-}
+  
