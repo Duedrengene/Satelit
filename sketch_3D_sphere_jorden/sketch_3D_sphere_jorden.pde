@@ -11,42 +11,58 @@ float r = 200;
 
 PImage earth;
 PShape globe;
-JSONObject json;
-JSONObject json2;
+JSONObject json,json2,position,position2;
+
+JSONArray  posi, posi2;
+
+float lat2,lon2,alt2,lat,lon,alt,latM,lonM;
 
 
 void setup() {
-    json = loadJSONObject("https://www.n2yo.com/rest/v1/satellite/positions/10529/41.702/-76.014/0/2/&&apiKey=UY7JUM-PX4X5D-CXLF35-4KH0");
-   // json2 = load
+    json = loadJSONObject("https://www.n2yo.com/rest/v1/satellite/positions/10529/41.702/-76.014/0/1/&apiKey=UY7JUM-PX4X5D-CXLF35-4KH0");
+    json2 = loadJSONObject("https://www.n2yo.com/rest/v1/satellite/positions/10529/41.702/-76.014/0/500/&apiKey=UY7JUM-PX4X5D-CXLF35-4KH0");
   size(600, 600, P3D);
   earth = loadImage("earth.jpg");
+  
+   posi =  json.getJSONArray("positions"); 
+  position = posi.getJSONObject(0);
+
+    posi2 =  json2.getJSONArray("positions"); 
+    println(posi2);
+  position2 = posi2.getJSONObject(0);
+  
+    lat2 = position2.getFloat("satlatitude");
+  lon2  = position2.getFloat("satlatitude");
+  alt2 = position2.getFloat("sataltitude");
+  lat = position.getFloat("satlatitude");
+  lon  = position.getFloat("satlatitude");
+  alt = position.getFloat("sataltitude");
+  println(lat2);
+    latM = lat2 - lat; 
+ lonM = lon2 - lon;
+
   
   noStroke();
   globe = createShape(SPHERE, r);
   globe.setTexture(earth);
   println(json);
+println(json2);
 }
 
 void draw() {
 
-  JSONArray posi =  json.getJSONArray("positions"); 
- JSONObject position = posi.getJSONObject(0);
- float lat = position.getFloat("satlatitude");
- float lon  = position.getFloat("satlatitude");
- float alt = position.getFloat("sataltitude");
- 
- /*
-   JSONArray posi =  json.getJSONArray("positions"); 
- JSONObject position = posi.getJSONObject(0);
- float lat = position.getFloat("satlatitude");
- float lon  = position.getFloat("satlatitude");
- float alt = position.getFloat("sataltitude");
- */
- println(position);
+
+
+ println(lat2);
+
+lat +=latM;
+lon+=lonM;
+
+ //println(position);
   background(51);
   translate(width*0.5, height*0.5);
   rotateY(angle);
-  angle += 0.05;
+  angle += 0.01;
 
   lights();
   fill(200);
@@ -90,7 +106,9 @@ void draw() {
 
     pushMatrix();
     translate(x, y, z*2);
-    rotate(angleb, raxis.x, raxis.y, raxis.z);
+    println("");
+    println("x="+lat);
+   rotate(angleb, raxis.x, raxis.y, raxis.z);
     fill(255);
     box(5, 5, 5);
     popMatrix();
