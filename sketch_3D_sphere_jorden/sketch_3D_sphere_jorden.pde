@@ -1,16 +1,11 @@
-// 3D Earthquake Data Visualization
-// The Coding Train / Daniel Shiffman
-// https://thecodingtrain.com/CodingChallenges/058-earthquakeviz3d.html
-// https://youtu.be/dbs4IYGfAXc
-// https://editor.p5js.org/codingtrain/sketches/tttPKxZi
-
 float angle;
 
 Table table;
 float r = 200;
 
-PImage earth;
+PImage earth,solpanel;
 PShape globe;
+PShape satelit;
 JSONObject json,json2,position,position2;
 
 JSONArray  posi, posi2;
@@ -23,6 +18,8 @@ void setup() {
     json2 = loadJSONObject("https://www.n2yo.com/rest/v1/satellite/positions/10529/41.702/-76.014/0/500/&apiKey=UY7JUM-PX4X5D-CXLF35-4KH0");
   size(600, 600, P3D);
   earth = loadImage("earth.jpg");
+  solpanel = loadImage("satelitexture.PNG");
+  solpanel.resize(5,5);
   
    posi =  json.getJSONArray("positions"); 
   position = posi.getJSONObject(0);
@@ -31,11 +28,11 @@ void setup() {
     println(posi2);
   position2 = posi2.getJSONObject(0);
   
-    lat2 = position2.getFloat("satlatitude");
-  lon2  = position2.getFloat("satlatitude");
+      lat2 = position2.getFloat("sataltitude");
+  lon2  = position2.getFloat("sataltitude");
   alt2 = position2.getFloat("sataltitude");
-  lat = position.getFloat("satlatitude");
-  lon  = position.getFloat("satlatitude");
+  lat = position.getFloat("sataltitude");
+  lon  = position.getFloat("sataltitude");
   alt = position.getFloat("sataltitude");
   println(lat2);
     latM = lat2 - lat; 
@@ -45,13 +42,14 @@ void setup() {
   noStroke();
   globe = createShape(SPHERE, r);
   globe.setTexture(earth);
+  
+  satelit = createShape(BOX,r);
+  satelit.setTexture(solpanel);
   println(json);
 println(json2);
 }
 
 void draw() {
-
-
 
  println(lat2);
 
@@ -71,24 +69,11 @@ lon+=lonM;
   shape(globe);
   
 
- //   float lat = row.getFloat("latitude");
- //   float lon = row.getFloat("longitude");
- //   float mag = row.getFloat("mag");
 
-    // original version
-    // float theta = radians(lat) + PI/2;
-
-    // fix: no + PI/2 needed, since latitude is between -180 and 180 deg
     float theta = radians(lat);
 
     float phi = radians(lon) + PI;
 
-    // original version
-     //float x = r * sin(theta) * cos(phi);
-     //float y = -r * sin(theta) * sin(phi);
-     //float z = r * cos(theta);
-
-    // fix: in OpenGL, y & z axes are flipped from math notation of spherical coordinates
     float x = r * cos(theta) * cos(phi);
     float y = -r * sin(theta);
     float z = -r * cos(theta) * sin(phi);
@@ -110,7 +95,12 @@ lon+=lonM;
     println("x="+lat);
    rotate(angleb, raxis.x, raxis.y, raxis.z);
     fill(255);
-    box(5, 5, 5);
+    //box(5, 5, 5);
+    shape(satelit,5,5);
+    rotate(-angleb, -raxis.x, -raxis.y, -raxis.z);
+    rotate(PI);
+    text("SS 1",5,5,6);
+    
     popMatrix();
     
   }
