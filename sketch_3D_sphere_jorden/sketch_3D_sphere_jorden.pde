@@ -1,7 +1,9 @@
+
 float angle;
 
 Table table;
 float r = 200;
+float rfirkant = 10;
 
 PImage earth,solpanel;
 PShape globe;
@@ -15,11 +17,11 @@ float lat2,lon2,alt2,lat,lon,alt,latM,lonM;
 
 void setup() {
     json = loadJSONObject("https://www.n2yo.com/rest/v1/satellite/positions/10529/41.702/-76.014/0/1/&apiKey=UY7JUM-PX4X5D-CXLF35-4KH0");
-    json2 = loadJSONObject("https://www.n2yo.com/rest/v1/satellite/positions/10529/41.702/-76.014/0/500/&apiKey=UY7JUM-PX4X5D-CXLF35-4KH0");
+    json2 = loadJSONObject("https://www.n2yo.com/rest/v1/satellite/positions/10529/41.702/-76.014/0/3/&apiKey=UY7JUM-PX4X5D-CXLF35-4KH0");
   size(600, 600, P3D);
   earth = loadImage("earth.jpg");
   solpanel = loadImage("satelitexture.PNG");
-  solpanel.resize(5,5);
+  //solpanel.resize(5,5);
   
    posi =  json.getJSONArray("positions"); 
   position = posi.getJSONObject(0);
@@ -43,14 +45,13 @@ void setup() {
   globe = createShape(SPHERE, r);
   globe.setTexture(earth);
   
-  satelit = createShape(BOX,r);
+  satelit = createShape(BOX,rfirkant,3,7);
   satelit.setTexture(solpanel);
   println(json);
 println(json2);
 }
 
 void draw() {
-
  println(lat2);
 
 lat +=latM;
@@ -58,10 +59,11 @@ lon+=lonM;
 
  //println(position);
   background(51);
-  fill(255);
+    fill(255);
   text("Satelit: SS_1",10,20);
   text("Latitude "+lat,10,40);
-  text("Longitude "+lon,10,60);
+  
+
   translate(width*0.5, height*0.5);
   rotateY(angle);
   angle += 0.01;
@@ -100,7 +102,13 @@ lon+=lonM;
    rotate(angleb, raxis.x, raxis.y, raxis.z);
     fill(255);
     //box(5, 5, 5);
-    shape(satelit,5,5);
+    shape(satelit);
+    box(5,2,20);
+   
+   
+    //box(10,15,8);
+    
+    //shape(satelit,2,5);
     rotate(-angleb, -raxis.x, -raxis.y, -raxis.z);
     rotate(PI);
     text("SS 1",5,5,6);
