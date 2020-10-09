@@ -58,6 +58,10 @@ lon+=lonM;
 
  //println(position);
   background(51);
+  fill(255);
+  text("Satelit: SS_1",10,20);
+  text("Latitude "+lat,10,40);
+  text("Longitude "+lon,10,60);
   translate(width*0.5, height*0.5);
   rotateY(angle);
   angle += 0.01;
